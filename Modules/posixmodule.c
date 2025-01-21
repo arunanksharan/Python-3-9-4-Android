@@ -36,6 +36,32 @@
 #  undef HAVE_FACCESSAT
 #endif
 
+#if defined(__ANDROID__)
+#define preadv2(fd, iov, cnt, offset, flags) preadv(fd, iov, cnt, offset)
+#define pwritev2(fd, iov, cnt, offset, flags) pwritev(fd, iov, cnt, offset)
+#endif
+
+#if defined(__ANDROID__)
+int getloadavg(double loadavg[], int nelem) {
+    // Android does not support getloadavg return dummy values
+    for (int i=0; i < nelem; i++) {
+        loadavg[i] = 0.0;
+    }
+    return -1;
+}
+#endif
+
+#ifdef __ANDROID__
+/* Fallback for fexecve on Android */
+#include <errno.h>
+static int android_fexecve(int fd, char *const argv[], char *const envp[]) {
+    errno = ENOSYS;  // Indicate system call is not implemented
+    return -1;
+}
+#define fexecve(fd, argv, envp) android_fexecve(fd, argv, envp)
+#endif
+
+
 #include <stdio.h>  /* needed for ctermid() */
 
 /*
