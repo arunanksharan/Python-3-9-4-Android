@@ -290,6 +290,7 @@ Return a list of all available password database entries, in arbitrary order.
 See help(pwd) for more on password database entries.
 [clinic start generated code]*/
 
+
 static PyObject *
 pwd_getpwall_impl(PyObject *module)
 /*[clinic end generated code: output=4853d2f5a0afac8a input=d7ecebfd90219b85]*/

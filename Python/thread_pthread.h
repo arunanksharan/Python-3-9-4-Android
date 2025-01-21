@@ -84,6 +84,13 @@
 #endif
 #endif
 
+/* Fallback for sem_clockwait for Android */
+#if defined(__ANDROID__)
+#include <errno.h>
+#define sem_clockwait(sem, clock, timeout) \
+   (((clock) == CLOCK_REALTIME) ? sem_timedwait(sem, timeout) : sem_wait((sem)))
+#endif
+
 
 /* Whether or not to use semaphores directly rather than emulating them with
  * mutexes and condition variables:
